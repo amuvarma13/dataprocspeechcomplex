@@ -47,10 +47,10 @@ def process_dataset_with_tts(dataset):
     )
     
     # Filter out None values (failed or skipped rows)
-    # processed_dataset = processed_dataset.filter(lambda x: x is not None)
+    processed_dataset = processed_dataset.filter(lambda x: x is not None)
     
     # Cast the 'audio' column to Audio feature
-    # processed_dataset = processed_dataset.cast_column('audio', Audio(sampling_rate=16000))
+    processed_dataset = processed_dataset.cast_column('audio', Audio(sampling_rate=16000))
     
     return processed_dataset
 
@@ -58,7 +58,7 @@ def process_dataset_with_tts(dataset):
 ds = load_dataset("amuvarma/sentences1")
 
 # Process the dataset (assuming we're using the 'train' split)
-ds["train"] = ds["train"].select(range(2000,6369))
+ds["train"] = ds["train"].select(range(0,100))
 processed_ds = process_dataset_with_tts(ds['train'])
 
 # Push the processed dataset to the Hub
