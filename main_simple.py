@@ -26,7 +26,7 @@ def process_dataset_with_tts(dataset):
     # Process the dataset using multithreading
     processed_dataset = dataset.map(
         process_row,
-        num_proc=num_cores,
+        num_proc=5,
         remove_columns=dataset.column_names  # Remove original columns
     )
     
