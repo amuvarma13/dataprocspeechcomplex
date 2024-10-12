@@ -19,7 +19,6 @@ def process_dataset_with_tts(dataset):
     processed_dataset = dataset.map(
         process_row,
         num_proc=1,
-        with_indices=True,
     )
     
     processed_dataset = processed_dataset.cast_column('audio', Audio(sampling_rate=16000))
