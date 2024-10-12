@@ -29,7 +29,7 @@ def process_dataset_with_tts(dataset):
             return None
         elif audio is None:
             print(f"Row {idx} failed to process.")
-            return None
+            return row
         else:
             
             row['audio'] = {
