@@ -1,10 +1,11 @@
 from text_to_audio_numpy import text_to_audio_array
 from datasets import load_dataset, Audio, Dataset
-
+print("Libraries loaded.")
 
 dsn = load_dataset("amuvarma/emo-texts-10")
 dataset =  dsn['train']
 
+print("Dataset loaded.")
 
 
 def process_dataset_with_tts(dataset):
