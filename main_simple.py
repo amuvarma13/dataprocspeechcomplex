@@ -16,26 +16,25 @@ def process_dataset_with_tts(dataset):
             except Exception as e:
                 print(f"Error processing row: {e}")
 
-        # audio = {"array":[], "sampling_rate":16000}
         audio = None
         thread = threading.Thread(target=process)
         thread.start()
         thread.join(timeout=10)  # Wait for up to 10 seconds
 
         if thread.is_alive():
-            print(f"Row {idx} took too long to process. Skipping.")
+            print(f"Row {idx} took too long to process. Setting empty audio array.")
             persistent_ws.reset_socket()
             sleep(10)
-            return None
+            audio = []  # Set to empty list if processing takes too long
         elif audio is None:
-            print(f"Row {idx} failed to process.")
-            return None
-        else:
-            row['audio'] = {
-                'array': audio,
-                'sampling_rate': 16000
-            }
-            return row
+            print(f"Row {idx} failed to process. Setting empty audio array.")
+            audio = []  # Set to empty list if processing fails
+
+        row['audio'] = {
+            'array': audio,
+            'sampling_rate': 16000
+        }
+        return row
 
     # Process the dataset
     processed_dataset = dataset.map(
@@ -51,7 +50,6 @@ def process_dataset_with_tts(dataset):
     processed_dataset = processed_dataset.cast_column('audio', Audio(sampling_rate=16000))
     
     return processed_dataset
-
 # Load the dataset
 ds = load_dataset("amuvarma/sentences1")
 
