@@ -44,7 +44,7 @@ def process_dataset_with_tts(dataset):
         remove_columns=dataset.column_names  # Remove original columns
     )
     print("about to push")
-    processed_dataset.push("amuvarma/sentences1-audio-debug-0")   
+    processed_dataset.push_to_hub("amuvarma/sentences1-audio-debug-0")   
     print("pushed")
     # Cast the 'audio' column to Audio feature
     processed_dataset = processed_dataset.cast_column('audio', Audio(sampling_rate=16000))
