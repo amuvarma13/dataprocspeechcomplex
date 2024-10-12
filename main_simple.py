@@ -1,9 +1,16 @@
 from text_to_audio_numpy import text_to_audio_array
-from datasets import load_dataset, Audio
+from datasets import load_dataset, Audio, Dataset
 from emotion_list import all_emotions, common_emotions
+from emotional_phrases.happy import happy_phrases
 import random
 
 batch_number = 2
+
+
+dataset = Dataset.from_dict({
+    "text": happy_phrases
+})
+
 
 
 
@@ -52,14 +59,9 @@ def process_dataset_with_tts(dataset):
     
     return processed_dataset
 
-# Load the dataset
-ds = load_dataset(f"amuvarma/sentences1-audio")
 
-# Process the dataset (assuming we're using the 'train' split)
-
-# ds["train"] = ds["train"].select(range((batch_number-1)*200, 2*batch_number*200))
-ds["train"] = ds["train"].select(range(0, 20))
-processed_ds = process_dataset_with_tts(ds['train'])
+smalldataset = dataset.select(range(0, 20))
+processed_ds = process_dataset_with_tts(smalldataset)
 
 # Push the processed dataset to the Hub
 processed_ds.push_to_hub(f"amuvarma/sentencesdebug{batch_number}")
