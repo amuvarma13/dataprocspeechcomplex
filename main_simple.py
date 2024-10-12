@@ -27,7 +27,6 @@ def process_dataset_with_tts(dataset):
     processed_dataset = dataset.map(
         process_row,
         num_proc=1,
-        remove_columns=dataset.column_names  # Remove original columns
     )
     
     # Filter out None values (failed rows)
