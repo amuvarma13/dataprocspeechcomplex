@@ -44,7 +44,7 @@ def process_dataset_with_tts(dataset):
     return processed_dataset
 
 
-dataset = dataset.select(range(0, 10))
+# dataset = dataset.select(range(0, 10))
 processed_ds = process_dataset_with_tts(dataset)
 
 # Push the processed dataset to the Hub
