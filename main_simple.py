@@ -48,6 +48,6 @@ def process_dataset_with_tts(dataset):
 processed_ds = process_dataset_with_tts(dataset)
 
 # Push the processed dataset to the Hub
-processed_ds.push_to_hub(f"amuvarma/sentencesangrydebug")
+processed_ds.push_to_hub(f"amuvarma/sentencesangry100")
 
 print("Done processing dataset.")
