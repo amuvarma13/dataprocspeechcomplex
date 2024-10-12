@@ -4,8 +4,8 @@ print("Libraries loaded.")
 
 
 
-start = 4500
-end = 5000
+start = 5000
+end = 5500
 num_threads = 10
 
 dsn = load_dataset("amuvarma/emotions-text-2")
@@ -18,7 +18,7 @@ def process_dataset_with_tts(dataset):
     def process_row(row):
         try:
             emotion = row["emotion"]
-            emotion = "whisper"
+            emotion = "shout"
             prompt = f"Read the following text in a really {emotion} voice:"
 
             audio = text_to_audio_array(row['text'], prompt)
