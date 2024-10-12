@@ -74,4 +74,4 @@ def text_to_audio_array(text, prompt="Read the following text exactly as it is:"
 # Test the function
 text = "Hello, my name is OpenAI."
 audio = text_to_audio_array(text)
-print(audio)
+print(audio.shape)
