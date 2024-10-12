@@ -15,6 +15,7 @@ def process_dataset_with_tts(dataset):
                 'array': audio,
                 'sampling_rate': 16000
             })
+            print("audio appended")
         return processed_batch
 
     # Get the number of available CPU cores
