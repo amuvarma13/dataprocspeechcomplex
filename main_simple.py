@@ -1,10 +1,14 @@
-from text_to_audio_numpy import text_to_audio_array
+from text_to_audio_numpy import text_to_audio_array, persistent_ws
 from datasets import load_dataset, Audio
-import multiprocessing
+from time import sleep
 
 def process_dataset_with_tts(dataset):
     def process_row(row, idx):
         print(f"Processing row {idx}...")
+        if idx % 10 == 0:
+            persistent_ws.reset_socket()
+            sleep(10)
+
         try:
             audio = text_to_audio_array(row['text'])
             row['audio'] = {
