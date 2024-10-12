@@ -45,10 +45,10 @@ def process_dataset_with_tts(dataset):
     return processed_dataset
 
 
-smalldataset = dataset.select(range(0, 20))
-processed_ds = process_dataset_with_tts(smalldataset)
+# smalldataset = dataset.select(range(0, 20))
+processed_ds = process_dataset_with_tts(dataset)
 
 # Push the processed dataset to the Hub
-processed_ds.push_to_hub(f"amuvarma/sentenceshappydebug")
+processed_ds.push_to_hub(f"amuvarma/sentenceshappy100")
 
 print("Done processing dataset.")
