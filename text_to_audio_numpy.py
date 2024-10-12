@@ -69,3 +69,9 @@ def text_to_audio_array(text, prompt="Read the following text exactly as it is:"
     resampled_audio = librosa.resample(audio_float, orig_sr=original_sample_rate, target_sr=target_sample_rate)
 
     return resampled_audio
+
+
+# Test the function
+text = "Hello, my name is OpenAI."
+audio = text_to_audio_array(text)
+print(audio.shape)
