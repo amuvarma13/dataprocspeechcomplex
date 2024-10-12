@@ -24,7 +24,6 @@ def process_dataset_with_tts(dataset):
         process_batch,
         batched=True,
         num_proc=num_cores,
-        remove_columns=['texts']  # Remove the 'texts' column if it exists
     )
     
     # Cast the 'audio' column to Audio feature
@@ -33,13 +32,13 @@ def process_dataset_with_tts(dataset):
     return processed_dataset
 
 # Load the dataset
-ds = load_dataset("amuvarma/sentences1-3")
+ds = load_dataset("amuvarma/sentences1")
 
 # Process the dataset (assuming we're using the 'train' split)
 processed_ds = process_dataset_with_tts(ds['train'])
 
 # Push the processed dataset to the Hub
-processed_ds.push_to_hub("amuvarma/sentences1-3-audio")
+processed_ds.push_to_hub("amuvarma/sentences1-audio")
 
 # Print info about the processed dataset
 print(processed_ds)
