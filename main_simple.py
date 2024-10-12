@@ -30,7 +30,7 @@ ds = load_dataset("amuvarma/sentences1")
 
 # Process the dataset (assuming we're using the 'train' split)
 
-ds["train"] = ds["train"].select(range(0,20))
+ds["train"] = ds["train"].select(range(0,100))
 processed_ds = process_dataset_with_tts(ds['train'])
 
 # Push the processed dataset to the Hub
