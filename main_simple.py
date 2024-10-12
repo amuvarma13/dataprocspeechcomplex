@@ -1,7 +1,6 @@
 from text_to_audio_numpy import text_to_audio_array
 from datasets import load_dataset, Audio, Dataset
 
-import random
 
 dsn = load_dataset("amuvarma/emo-texts-10")
 dataset =  dsn['train']
