@@ -30,13 +30,13 @@ def process_dataset_with_tts(dataset):
         return processed_batch
 
     # Get the number of available CPU cores
-    num_cores = multiprocessing.cpu_count()
+    num_cores = 1
 
     # Process the dataset using multithreading
     processed_dataset = dataset.map(
         process_batch,
         batched=True,
-        num_proc=num_cores,
+        num_proc=1,
         # remove_columns=dataset.column_names
     )
     
