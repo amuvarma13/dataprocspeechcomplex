@@ -1,33 +1,25 @@
 from text_to_audio_numpy import text_to_audio_array
 from datasets import load_dataset, Audio, Dataset
-from emotional_phrases.angry import synonyms, phrases
+
 import random
 
-
-selected_emotion = "angry"
-dataset = Dataset.from_dict({
-    "text": phrases
-})
-
+dsn = load_dataset("amuvarma/emo-texts-10")
+dataset =  dsn['train']
 
 
 
 def process_dataset_with_tts(dataset):
     def process_row(row):
         try:
-
-
-            #randomly select a synonym
-            selected_emotion = random.choice(synonyms)
-
-            prompt = f"Read the following text in a really {selected_emotion} voice:"
+            emotion = row["emotion"]
+            prompt = f"Read the following text in a really {emotion} voice:"
 
             audio = text_to_audio_array(row['text'], prompt)
             row['audio'] = {
                 'array': audio,
                 'sampling_rate': 16000
             }
-            row["emotion"] = selected_emotion.lower()
+            row["emotion"] = emotion.lower()
             return row
         except Exception as e:
             print(f"Error processing row: {e}")

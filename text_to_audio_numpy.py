@@ -5,6 +5,7 @@ import numpy as np
 import librosa
 import threading
 import os
+import soundfile as sf
 
 url = "wss://api.openai.com/v1/realtime?model=gpt-4o-realtime-preview-2024-10-01"
 apikey = os.getenv("OPENAI_API_KEY")
@@ -71,7 +72,14 @@ def text_to_audio_array(text, prompt="Read the following text exactly as it is:"
     return resampled_audio
 
 
-# Test the function
-text = "Hello, my name is OpenAI."
-audio = text_to_audio_array(text)
-print(audio.shape)
+# # Test the function
+# text = "Why do these idiots keep coming back?"
+# print(f"Text: {text}")
+# audio = text_to_audio_array(text, prompt="Read the following text in an exasperated voice:")
+# print(f"Audio array: {audio}")
+# print(audio.shape)
+
+# # Write the audio array to output.wav at 16 kHz
+# output_filename = "output.wav"
+# sf.write(output_filename, audio, 16000)
+# print(f"Audio written to {output_filename}")
