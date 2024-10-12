@@ -10,6 +10,7 @@ def process_dataset_with_tts(dataset):
         }
         for text in batch['text']:
             audio = text_to_audio_array(text)
+            print("audio received")
             processed_batch['audio'].append({
                 'array': audio,
                 'sampling_rate': 16000
