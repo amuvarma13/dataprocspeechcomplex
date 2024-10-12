@@ -1,16 +1,24 @@
 from text_to_audio_numpy import text_to_audio_array
 from datasets import load_dataset, Audio
 import multiprocessing
+import logging
+
+# Set up logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 def process_dataset_with_tts(dataset):
     def process_row(row):
-        audio = text_to_audio_array(row['text'])
-        row['audio'] = {
-            'array': audio,
-            'sampling_rate': 16000
-        }
-
-        return row
+        try:
+            audio = text_to_audio_array(row['text'])
+            row['audio'] = {
+                'array': audio,
+                'sampling_rate': 16000
+            }
+            return row
+        except Exception as e:
+            logger.error(f"Error processing row: {e}")
+            return None  # Returning None will cause this row to be filtered out
 
     # Get the number of available CPU cores
     num_cores = multiprocessing.cpu_count()
@@ -19,7 +27,11 @@ def process_dataset_with_tts(dataset):
     processed_dataset = dataset.map(
         process_row,
         num_proc=num_cores,
+        remove_columns=dataset.column_names  # Remove original columns
     )
+    
+    # Filter out None values (failed rows)
+    processed_dataset = processed_dataset.filter(lambda x: x is not None)
     
     # Cast the 'audio' column to Audio feature
     processed_dataset = processed_dataset.cast_column('audio', Audio(sampling_rate=16000))
