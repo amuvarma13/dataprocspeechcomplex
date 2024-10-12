@@ -49,11 +49,4 @@ processed_ds = process_dataset_with_tts(ds['train'])
 # Push the processed dataset to the Hub
 processed_ds.push_to_hub("amuvarma/sentences1-audio")
 
-# Print info about the processed dataset
-print(processed_ds)
-print(f"Number of rows: {len(processed_ds)}")
-print(f"Columns: {processed_ds.column_names}")
-
-# Example: Print the length of the audio array for the first row
-first_row_audio = processed_ds[0]['audio']['array']
-print(f"Length of audio array in first row: {len(first_row_audio)}")
+print("Done processing dataset.")
