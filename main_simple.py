@@ -5,12 +5,11 @@ import multiprocessing
 def process_dataset_with_tts(dataset):
     def process_row(row):
         audio = text_to_audio_array(row['text'])
-        print("audio received")
         row['audio'] = {
             'array': audio,
             'sampling_rate': 16000
         }
-        print("audio appended")
+
         return row
 
     # Get the number of available CPU cores
@@ -19,7 +18,7 @@ def process_dataset_with_tts(dataset):
     # Process the dataset using multithreading
     processed_dataset = dataset.map(
         process_row,
-        num_proc=5,
+        num_proc=num_cores,
     )
     
     # Cast the 'audio' column to Audio feature

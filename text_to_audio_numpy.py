@@ -26,7 +26,7 @@ def text_to_audio_array(text, prompt="Read the following text exactly as it is:"
             audio_complete.set()
 
     def on_open(ws):
-        print("Connected to server.")
+
         ws.send(json.dumps({
             "type": "response.create",
             "response": {
