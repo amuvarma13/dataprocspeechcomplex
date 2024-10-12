@@ -26,6 +26,8 @@ ds = load_dataset("amuvarma/sentences1-3")
 
 processed_ds = process_dataset_with_tts(ds['train'])  # Assuming we're using the 'train' split
 
+processed_ds.push_to_hub("amuvarma/sentences1-3-audio")  # Push the processed dataset to the Hub
+
 # Print info about the processed dataset
 print(processed_ds)
 print(f"Number of rows: {len(processed_ds)}")
