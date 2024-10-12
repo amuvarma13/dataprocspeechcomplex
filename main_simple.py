@@ -11,11 +11,9 @@ logger = logging.getLogger(__name__)
 def process_dataset_with_tts(dataset):
     def process_row(row, idx):
         try:
-            audio = text_to_audio_array(row['text'])
-            row['audio'] = {
-                'array': audio,
-                'sampling_rate': 16000
-            }
+            # Assuming the text is the first (and only) item in the list
+            text = row[0]
+            audio = text_to_audio_array(text)
             
             # Reset socket and sleep every 10 rows
             if (idx + 1) % 10 == 0:
@@ -23,12 +21,18 @@ def process_dataset_with_tts(dataset):
                 persistent_ws.reset_socket()
                 time.sleep(20)  # Wait for 20 seconds after reset
             
-            return row
+            return {
+                'text': text,
+                'audio': {
+                    'array': audio,
+                    'sampling_rate': 16000
+                }
+            }
         except Exception as e:
             logger.error(f"Error processing row {idx}: {e}")
             return None  # Returning None will cause this row to be filtered out
 
-    # Process the dataset using multithreading
+    # Process the dataset
     processed_dataset = dataset.map(
         process_row,
         with_indices=True,
