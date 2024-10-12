@@ -23,7 +23,7 @@ def process_dataset_with_tts(dataset):
     processed_dataset = dataset.map(
         process_batch,
         batched=True,
-        num_proc=num_cores,
+        num_proc=5,
     )
     
     # Cast the 'audio' column to Audio feature
