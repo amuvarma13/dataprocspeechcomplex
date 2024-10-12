@@ -1,24 +1,36 @@
 from text_to_audio_numpy import text_to_audio_array
 from datasets import load_dataset, Audio
 import numpy as np
+import multiprocessing
 
 def process_dataset_with_tts(dataset):
-    def process_row(row):
-        all_audio = []
-        for text in row['texts']:
-            audio = text_to_audio_array(text)
-            all_audio.append(audio)
-        
-        combined_audio = np.concatenate(all_audio)
-        
-        row['audio'] = {
-            'array': combined_audio,
-            'sampling_rate': 16000
+    def process_batch(batch):
+        processed_batch = {
+            'texts': batch['texts'],
+            'audio': []
         }
-        return row
+        for texts in batch['texts']:
+            all_audio = []
+            for text in texts:
+                audio = text_to_audio_array(text)
+                all_audio.append(audio)
+            combined_audio = np.concatenate(all_audio)
+            processed_batch['audio'].append({
+                'array': combined_audio,
+                'sampling_rate': 16000
+            })
+        return processed_batch
 
-    # Process the dataset
-    processed_dataset = dataset.map(process_row)
+    # Get the number of available CPU cores
+    num_cores = multiprocessing.cpu_count()
+
+    # Process the dataset using multithreading
+    processed_dataset = dataset.map(
+        process_batch,
+        batched=True,
+        num_proc=num_cores,
+        remove_columns=dataset.column_names
+    )
     
     # Cast the 'audio' column to Audio feature
     processed_dataset = processed_dataset.cast_column('audio', Audio(sampling_rate=16000))
