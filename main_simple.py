@@ -1,36 +1,52 @@
 from text_to_audio_numpy import text_to_audio_array, persistent_ws
 from datasets import load_dataset, Audio
 from time import sleep
+import signal
+import threading
 
 def process_dataset_with_tts(dataset):
-    def process_row(row, idx):
+    def timeout_handler(signum, frame):
+        raise TimeoutError("Processing took too long")
+
+    def process_row_with_timeout(row, idx):
         print(f"Processing row {idx}...")
-        if idx % 10 == 0:
+        
+        def process():
+            nonlocal audio
+            try:
+                audio = text_to_audio_array(row['text'])
+            except Exception as e:
+                print(f"Error processing row: {e}")
+
+        audio = None
+        thread = threading.Thread(target=process)
+        thread.start()
+        thread.join(timeout=10)  # Wait for up to 10 seconds
+
+        if thread.is_alive():
+            print(f"Row {idx} took too long to process. Skipping.")
             persistent_ws.reset_socket()
             sleep(10)
-
-        try:
-            audio = text_to_audio_array(row['text'])
+            return None
+        elif audio is None:
+            print(f"Row {idx} failed to process.")
+            return None
+        else:
             row['audio'] = {
                 'array': audio,
                 'sampling_rate': 16000
             }
             return row
-        except Exception as e:
-            print(f"Error processing row: {e}")
-            return None  # Returning None will cause this row to be filtered out
 
-    # Get the number of available CPU cores
-
-    # Process the dataset using multithreading
+    # Process the dataset
     processed_dataset = dataset.map(
-        process_row,
+        process_row_with_timeout,
         num_proc=1,
         with_indices=True,
         remove_columns=dataset.column_names  # Remove original columns
     )
     
-    # Filter out None values (failed rows)
+    # Filter out None values (failed or skipped rows)
     processed_dataset = processed_dataset.filter(lambda x: x is not None)
     
     # Cast the 'audio' column to Audio feature
@@ -42,11 +58,13 @@ def process_dataset_with_tts(dataset):
 ds = load_dataset("amuvarma/sentences1")
 
 # Process the dataset (assuming we're using the 'train' split)
-
-ds["train"] = ds["train"].select(range(200))
+ds["train"] = ds["train"].select(range(200,1000))
 processed_ds = process_dataset_with_tts(ds['train'])
 
 # Push the processed dataset to the Hub
 processed_ds.push_to_hub("amuvarma/sentences1-audio")
 
 print("Done processing dataset.")
+
+# Close the WebSocket connection when done
+persistent_ws.close()
