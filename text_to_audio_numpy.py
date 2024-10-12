@@ -22,7 +22,7 @@ class PersistentWebSocket:
 
         message_type = socket_message["type"]
 
-        print(message_type)
+
 
         if message_type == "response.audio.delta":
             delta = socket_message["delta"]
