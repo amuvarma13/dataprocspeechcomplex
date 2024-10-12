@@ -16,7 +16,7 @@ def process_dataset_with_tts(dataset):
             except Exception as e:
                 print(f"Error processing row: {e}")
 
-        audio = None
+        audio = {"array":[], "sampling_rate":16000}
         thread = threading.Thread(target=process)
         thread.start()
         thread.join(timeout=10)  # Wait for up to 10 seconds
