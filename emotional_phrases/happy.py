@@ -101,4 +101,4 @@ phrases = [
     "I made a decision and feel confident about it!"
 ]
 
-synonyms = ["happy", "joyful", "content", "cheerful", "pleased", "delighted"]
+synonyms = ["happy", "joyful", "ecstatic", "cheerful", "overjoyed", "delighted"]
