@@ -1,4 +1,4 @@
-from text_to_audio_numpy import text_to_audio_array, persistent_ws
+from text_to_audio_numpy import text_to_audio_array
 from datasets import load_dataset, Audio
 from time import sleep
 
