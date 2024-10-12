@@ -3,28 +3,22 @@ from datasets import load_dataset, Audio
 import multiprocessing
 
 def process_dataset_with_tts(dataset):
-    def process_batch(batch):
-        processed_batch = {
-            'text': batch['text'],
-            'audio': []
+    def process_row(row):
+        audio = text_to_audio_array(row['text'])
+        print("audio received")
+        row['audio'] = {
+            'array': audio,
+            'sampling_rate': 16000
         }
-        for text in batch['text']:
-            audio = text_to_audio_array(text)
-            print("audio received")
-            processed_batch['audio'].append({
-                'array': audio,
-                'sampling_rate': 16000
-            })
-            print("audio appended")
-        return processed_batch
+        print("audio appended")
+        return row
 
     # Get the number of available CPU cores
     num_cores = multiprocessing.cpu_count()
 
     # Process the dataset using multithreading
     processed_dataset = dataset.map(
-        process_batch,
-        batched=True,
+        process_row,
         num_proc=5,
     )
     
