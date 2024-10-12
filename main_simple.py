@@ -5,8 +5,8 @@ print("Libraries loaded.")
 
 
 start = 1500
-end = 1510
-num_threads = 2
+end = 2000
+num_threads = 4
 
 dsn = load_dataset("amuvarma/emotions-text-2")
 dataset =  dsn['train']
