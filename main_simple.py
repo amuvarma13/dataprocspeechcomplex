@@ -26,7 +26,7 @@ def process_dataset_with_tts(dataset):
     # Process the dataset using multithreading
     processed_dataset = dataset.map(
         process_row,
-        num_proc=5,
+        num_proc=1,
         remove_columns=dataset.column_names  # Remove original columns
     )
     
@@ -42,6 +42,8 @@ def process_dataset_with_tts(dataset):
 ds = load_dataset("amuvarma/sentences1")
 
 # Process the dataset (assuming we're using the 'train' split)
+
+ds = ds.select(range(1))
 processed_ds = process_dataset_with_tts(ds['train'])
 
 # Push the processed dataset to the Hub
