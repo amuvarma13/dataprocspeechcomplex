@@ -1,42 +1,28 @@
-from text_to_audio_numpy import text_to_audio_array, persistent_ws
+from text_to_audio_numpy import text_to_audio_array
 from datasets import load_dataset, Audio
 import multiprocessing
-import logging
-import time
-
-# Set up logging
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
 
 def process_dataset_with_tts(dataset):
-    def process_row(row, idx):
+    def process_row(row):
         try:
-            # Assuming the text is the first (and only) item in the list
-            text = row[0]
-            audio = text_to_audio_array(text)
-            
-            # Reset socket and sleep every 10 rows
-            if (idx + 1) % 10 == 0:
-                logger.info(f"Processed {idx + 1} rows. Resetting socket...")
-                persistent_ws.reset_socket()
-                time.sleep(20)  # Wait for 20 seconds after reset
-            
-            return {
-                'text': text,
-                'audio': {
-                    'array': audio,
-                    'sampling_rate': 16000
-                }
+            audio = text_to_audio_array(row['text'])
+            row['audio'] = {
+                'array': audio,
+                'sampling_rate': 16000
             }
+            return row
         except Exception as e:
-            logger.error(f"Error processing row {idx}: {e}")
+            print(f"Error processing row: {e}")
             return None  # Returning None will cause this row to be filtered out
 
-    # Process the dataset
+    # Get the number of available CPU cores
+    num_cores = multiprocessing.cpu_count()
+
+    # Process the dataset using multithreading
     processed_dataset = dataset.map(
         process_row,
-        with_indices=True,
         num_proc=1,
+        remove_columns=dataset.column_names  # Remove original columns
     )
     
     # Filter out None values (failed rows)
@@ -51,13 +37,11 @@ def process_dataset_with_tts(dataset):
 ds = load_dataset("amuvarma/sentences1")
 
 # Process the dataset (assuming we're using the 'train' split)
-ds["train"] = ds["train"].select(range(200))
+
+ds["train"] = ds["train"].select(range(2))
 processed_ds = process_dataset_with_tts(ds['train'])
 
 # Push the processed dataset to the Hub
-processed_ds.push_to_hub("amuvarma/sentences1-audio-0-200")
+processed_ds.push_to_hub("amuvarma/sentences1-audio")
 
 print("Done processing dataset.")
-
-# Close the WebSocket connection when done
-persistent_ws.close()
