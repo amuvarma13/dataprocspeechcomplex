@@ -50,7 +50,7 @@ def process_dataset_with_tts(dataset):
     # processed_dataset = processed_dataset.filter(lambda x: x is not None)
     
     # Cast the 'audio' column to Audio feature
-    processed_dataset = processed_dataset.cast_column('audio', Audio(sampling_rate=16000))
+    # processed_dataset = processed_dataset.cast_column('audio', Audio(sampling_rate=16000))
     
     return processed_dataset
 
