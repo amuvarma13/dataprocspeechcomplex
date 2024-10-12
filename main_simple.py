@@ -3,7 +3,8 @@ from datasets import load_dataset, Audio
 import multiprocessing
 
 def process_dataset_with_tts(dataset):
-    def process_row(row):
+    def process_row(row, idx):
+        print(f"Processing row {idx}...")
         try:
             audio = text_to_audio_array(row['text'])
             row['audio'] = {
@@ -16,12 +17,12 @@ def process_dataset_with_tts(dataset):
             return None  # Returning None will cause this row to be filtered out
 
     # Get the number of available CPU cores
-    num_cores = multiprocessing.cpu_count()
 
     # Process the dataset using multithreading
     processed_dataset = dataset.map(
         process_row,
         num_proc=1,
+        with_indices=True,
         remove_columns=dataset.column_names  # Remove original columns
     )
     
@@ -38,7 +39,7 @@ ds = load_dataset("amuvarma/sentences1")
 
 # Process the dataset (assuming we're using the 'train' split)
 
-ds["train"] = ds["train"].select(range(2))
+ds["train"] = ds["train"].select(range(200))
 processed_ds = process_dataset_with_tts(ds['train'])
 
 # Push the processed dataset to the Hub
