@@ -3,17 +3,21 @@ common_emotions = [
     "Sad",
     "Angry",
     "Anxious",
-    "Content",
     "Excited",
     "Tired",
     "Frustrated",
     "Bored",
-    "Relaxed",
     "Curious",
     "Afraid",
     "Confused",
     "Lonely",
-    "Hopeful"
+    "Hopeful", 
+    "High pitched", 
+    "Low pitched",
+    "Fast",
+    "Slow",
+    "Whisper",
+    "Shout",
 ]
 
 

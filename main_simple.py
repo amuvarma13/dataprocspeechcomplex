@@ -1,14 +1,13 @@
 from text_to_audio_numpy import text_to_audio_array
 from datasets import load_dataset, Audio, Dataset
-from emotion_list import all_emotions, common_emotions
-from emotional_phrases.happy import happy_phrases
+from emotional_phrases.happy import synonyms, phrases
 import random
 
 batch_number = 2
 
 selected_emotion = "happy"
 dataset = Dataset.from_dict({
-    "text": happy_phrases
+    "text": phrases
 })
 
 
@@ -18,6 +17,9 @@ def process_dataset_with_tts(dataset):
     def process_row(row):
         try:
 
+
+            #randomly select a synonym
+            selected_emotion = random.choice(synonyms)
 
             prompt = f"Read the following text in a really {selected_emotion} voice:"
 
@@ -47,6 +49,6 @@ smalldataset = dataset.select(range(0, 20))
 processed_ds = process_dataset_with_tts(smalldataset)
 
 # Push the processed dataset to the Hub
-processed_ds.push_to_hub(f"amuvarma/sentencesdebug{batch_number}")
+processed_ds.push_to_hub(f"amuvarma/sentenceshappydebug")
 
 print("Done processing dataset.")
