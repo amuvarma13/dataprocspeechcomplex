@@ -47,7 +47,7 @@ def process_dataset_with_tts(dataset):
     )
     
     # Filter out None values (failed or skipped rows)
-    processed_dataset = processed_dataset.filter(lambda x: x is not None)
+    # processed_dataset = processed_dataset.filter(lambda x: x is not None)
     
     # Cast the 'audio' column to Audio feature
     processed_dataset = processed_dataset.cast_column('audio', Audio(sampling_rate=16000))
