@@ -41,7 +41,6 @@ def process_dataset_with_tts(dataset):
         process_row_with_timeout,
         num_proc=1,
         with_indices=True,
-        remove_columns=dataset.column_names  # Remove original columns
     )
     print("about to push")
     processed_dataset.push_to_hub("amuvarma/sentences1-audio-debug-0")   
