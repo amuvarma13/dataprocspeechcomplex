@@ -43,9 +43,10 @@ def process_dataset_with_tts(dataset):
         with_indices=True,
         remove_columns=dataset.column_names  # Remove original columns
     )
-    print("about to push")
-    processed_dataset.push("amuvarma/sentences1-audio-debug-0")   
-    print("pushed")
+    
+    # Filter out None values (failed or skipped rows)
+    processed_dataset = processed_dataset.filter(lambda x: x is not None)
+    
     # Cast the 'audio' column to Audio feature
     processed_dataset = processed_dataset.cast_column('audio', Audio(sampling_rate=16000))
     
