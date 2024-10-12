@@ -61,4 +61,63 @@ class PersistentWebSocket:
         # Wait for the connection to be established
         self.is_connected.wait(timeout=10) 
         if not self.is_connected.is_set():
-            raise ConnectionError("Failed to establish WebSo
+            raise ConnectionError("Failed to establish WebSocket connection")
+
+    def send_message(self, message):
+        if self.ws and self.ws.sock and self.ws.sock.connected:
+            self.ws.send(json.dumps(message))
+        else:
+            raise ConnectionError("WebSocket is not connected")
+
+    def close(self):
+        if self.ws:
+            self.ws.close()
+        if self.websocket_thread:
+            self.websocket_thread.join()
+        self.is_connected.clear()
+
+    def reset_socket(self):
+        print("Resetting WebSocket connection...")
+        self.close()
+        time.sleep(1)  # Give a short delay before reconnecting
+        self.connect()
+        print("WebSocket connection reset complete.")
+
+persistent_ws = PersistentWebSocket()
+persistent_ws.connect()
+
+def text_to_audio_array(text, prompt="Read the following text exactly as it is:"):
+    persistent_ws.audio_string = ""
+    persistent_ws.audio_complete.clear()
+
+    try:
+        persistent_ws.send_message({
+            "type": "response.create",
+            "response": {
+                "modalities": ['audio', 'text'],
+                "instructions": f"{prompt} {text}",
+            }
+        })
+
+        # Wait for the audio transmission to complete
+        persistent_ws.audio_complete.wait()
+
+        if not persistent_ws.audio_string:
+            raise ValueError("No audio received.")
+
+        # Process the audio
+        raw_pcm_data = base64.b64decode(persistent_ws.audio_string)
+        audio_array = np.frombuffer(raw_pcm_data, dtype=np.int16)
+        audio_float = audio_array.astype(np.float32) / 32768.0
+
+        # Resample to 16 kHz
+        original_sample_rate = 24000  # Assuming the original sample rate is 24 kHz
+        target_sample_rate = 16000
+        resampled_audio = librosa.resample(audio_float, orig_sr=original_sample_rate, target_sr=target_sample_rate)
+
+        return resampled_audio
+
+    except Exception as e:
+        print(f"Error in text_to_audio_array: {e}")
+        return None
+
