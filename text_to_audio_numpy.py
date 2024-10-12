@@ -125,7 +125,7 @@ def text_to_audio_array(text, prompt="Read the following text exactly as it is:"
 # text = "Hello, world!"
 # audio = text_to_audio_array(text)
 # 
-# # If you need to reset the connection:
+# # If you need to reset the connection: 
 # persistent_ws.reset_socket()
 # 
 # # Remember to close the connection when you're completely done:
