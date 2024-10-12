@@ -6,7 +6,7 @@ import random
 
 batch_number = 2
 
-
+selected_emotion = "happy"
 dataset = Dataset.from_dict({
     "text": happy_phrases
 })
@@ -17,26 +17,9 @@ dataset = Dataset.from_dict({
 def process_dataset_with_tts(dataset):
     def process_row(row):
         try:
-            #lets generate the prompt
-
-            # generate 0 or 1 randomly
-            prompt = None
-            selected_emotion = None
-            random_number = random.randint(0,1)
-
-            if(random_number == 0):
-                #pick a random element from common_emotions
-                selected_emotion = random.choice(common_emotions)
-                prompt = f"Read the following text in a {selected_emotion} tone:"
-            else:
-                #pick a random element from all_emotions
-                selected_emotion = random.choice(all_emotions)
-                prompt = f"Read the following text in a {selected_emotion} tone:"
 
 
-
-
-
+            prompt = f"Read the following text in a really {selected_emotion} voice:"
 
             audio = text_to_audio_array(row['text'], prompt)
             row['audio'] = {
