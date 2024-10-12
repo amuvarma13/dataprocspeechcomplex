@@ -4,8 +4,8 @@ print("Libraries loaded.")
 
 
 
-start = 500
-end = 1000
+start = 1000
+end = 1500
 num_threads = 10
 
 dsn = load_dataset("amuvarma/emotions-text-2")
