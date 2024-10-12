@@ -18,6 +18,9 @@ common_emotions = [
     "Slow",
     "Whisper",
     "Shout",
+    "Quiet", 
+    "Loud", 
+    
 ]
 
 
