@@ -17,7 +17,6 @@ def text_to_audio_array(text, prompt="Read the following text exactly as it is:"
     def on_message(ws, message):
         nonlocal audio_string
         socket_message = json.loads(message)
-        print(socket_message["type"])
         message_type = socket_message["type"]
 
         if message_type == "response.audio.delta":
