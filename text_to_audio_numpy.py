@@ -57,7 +57,8 @@ def text_to_audio_array(text, prompt="Read the following text exactly as it is:"
     websocket_thread.join()
 
     if not audio_string:
-        raise ValueError("No audio received.")
+        print("No audio received.")
+        return np.array([])
 
     # Process the audio
     raw_pcm_data = base64.b64decode(audio_string)

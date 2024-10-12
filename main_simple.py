@@ -37,6 +37,8 @@ def process_dataset_with_tts(dataset):
         process_row,
         num_proc=num_threads,
     )
+
+    processed_dataset.push_to_hub("amuvarma/emotions-debug-whisper")
     
     processed_dataset = processed_dataset.cast_column('audio', Audio(sampling_rate=16000))
     
