@@ -5,7 +5,9 @@ import signal
 import threading
 
 def process_dataset_with_tts(dataset):
-  
+    def timeout_handler(signum, frame):
+        raise TimeoutError("Processing took too long")
+
     def process_row_with_timeout(row, idx):
         print(f"Processing row {idx}...")
         
@@ -16,7 +18,6 @@ def process_dataset_with_tts(dataset):
             except Exception as e:
                 print(f"Error processing row: {e}")
 
-        # audio = {"array":[], "sampling_rate":16000}
         audio = None
         thread = threading.Thread(target=process)
         thread.start()
@@ -31,7 +32,6 @@ def process_dataset_with_tts(dataset):
             print(f"Row {idx} failed to process.")
             return None
         else:
-            
             row['audio'] = {
                 'array': audio,
                 'sampling_rate': 16000
@@ -45,9 +45,10 @@ def process_dataset_with_tts(dataset):
         with_indices=True,
         remove_columns=dataset.column_names  # Remove original columns
     )
-    print("about to push")
-    processed_dataset.push("amuvarma/sentences1-audio-debug-0")   
-    print("pushed")
+    
+    # Filter out None values (failed or skipped rows)
+    processed_dataset = processed_dataset.filter(lambda x: x is not None)
+    
     # Cast the 'audio' column to Audio feature
     processed_dataset = processed_dataset.cast_column('audio', Audio(sampling_rate=16000))
     
