@@ -4,8 +4,8 @@ print("Libraries loaded.")
 
 
 
-start = 0
-end = 100
+start = 100
+end = 500
 num_threads = 10
 
 dsn = load_dataset("amuvarma/emotions-text-2")
@@ -48,6 +48,6 @@ processed_ds = process_dataset_with_tts(dataset)
 
 
 # Push the processed dataset to the Hub
-processed_ds.push_to_hub(f"amuvarma/emotions-text-debug-{start}-{end}")
+processed_ds.push_to_hub(f"amuvarma/emotions-2-{start}-{end}")
 
 print("Done processing dataset.")
