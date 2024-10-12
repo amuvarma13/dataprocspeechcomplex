@@ -58,11 +58,11 @@ def process_dataset_with_tts(dataset):
 ds = load_dataset("amuvarma/sentences1")
 
 # Process the dataset (assuming we're using the 'train' split)
-ds["train"] = ds["train"].select(range(200,1000))
+ds["train"] = ds["train"].select(range(1000,2000))
 processed_ds = process_dataset_with_tts(ds['train'])
 
 # Push the processed dataset to the Hub
-processed_ds.push_to_hub("amuvarma/sentences1-audio")
+processed_ds.push_to_hub("amuvarma/sentences1-audio-2")
 
 print("Done processing dataset.")
 
