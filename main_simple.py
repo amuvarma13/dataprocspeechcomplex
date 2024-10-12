@@ -2,7 +2,7 @@ from text_to_audio_numpy import text_to_audio_array
 from datasets import load_dataset, Audio, Dataset
 print("Libraries loaded.")
 
-dsn = load_dataset("amuvarma/emo-texts-10")
+dsn = load_dataset("amuvarma/emotions-text")
 dataset =  dsn['train']
 
 print("Dataset loaded.")
@@ -36,10 +36,12 @@ def process_dataset_with_tts(dataset):
     return processed_dataset
 
 
-# dataset = dataset.select(range(0, 10))
+dataset = dataset.select(range(0, 10))
 processed_ds = process_dataset_with_tts(dataset)
 
+
+
 # Push the processed dataset to the Hub
-processed_ds.push_to_hub(f"amuvarma/sentencesangry100")
+processed_ds.push_to_hub(f"amuvarma/emotions-text-debug-0-10")
 
 print("Done processing dataset.")
