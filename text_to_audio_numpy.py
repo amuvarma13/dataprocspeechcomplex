@@ -19,7 +19,7 @@ class PersistentWebSocket:
 
     def on_message(self, ws, message):
         socket_message = json.loads(message)
-        print(socket_message)
+
         message_type = socket_message["type"]
 
         if message_type == "response.audio.delta":
@@ -27,6 +27,9 @@ class PersistentWebSocket:
             self.audio_string += delta
         elif message_type == "response.done":
             self.audio_complete.set()
+
+        elif message_type == "rate_limits.updated":
+            print(message)
 
     def on_open(self, ws):
         print("WebSocket connection opened")
